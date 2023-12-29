@@ -8,27 +8,30 @@ interface AutocompleteArgs {
 }
 
 const fetchData = async (): Promise<Data[]> => {
-  await new Promise(resolve => setTimeout(resolve, 1500));
-
-  return books_data;
-
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  return books_data.slice(0, 3);
 }
 
 const Autocomplete = (args: AutocompleteArgs) => {
   const [text, setText] = useState<string>("");
+  const [options, setOptions] = useState<Data[]>([]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
 
   useEffect(() => {
+    
     if (text == "") {
       console.log("empty value");
     } else {
       console.log(text);
     }
 
-    fetchData();
+    // const fetchDataAsync =
+    (async () => setOptions(await fetchData()))();
+    // fetchDataAsync();
+    
   }, [text]);
 
   return (
@@ -51,9 +54,9 @@ const Autocomplete = (args: AutocompleteArgs) => {
         </div>
       </div>
 
-      <div>
+      <div id="optionsDiv">
         {
-          books_data.map((book) => (<AutocompleteOption id={book.id} str={book.str} />))
+          options.map((book) => (<AutocompleteOption id={book.id} str={book.str} key={book.id}/>))
         }   
       </div>
     </div>
