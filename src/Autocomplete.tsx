@@ -7,15 +7,22 @@ interface AutocompleteArgs {
   label: string;
 }
 
-const fetchData = async (): Promise<Data[]> => {
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  return books_data.slice(0, 3);
-}
+
 
 const Autocomplete = (args: AutocompleteArgs) => {
   const [text, setText] = useState<string>("");
   const [options, setOptions] = useState<Data[]>([]);
 
+  const fetchData = async (): Promise<Data[]> => {
+    await new Promise(resolve => setTimeout(resolve, 2000)); 
+    
+    const filtered = books_data.filter((book) => {
+      return book.str.includes(text)
+    });
+
+    return filtered.slice(0, 10);
+  }
+  
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
@@ -54,7 +61,7 @@ const Autocomplete = (args: AutocompleteArgs) => {
         </div>
       </div>
 
-      <div id="optionsDiv">
+      <div id="optionsDiv" className="relative">
         {
           options.map((book) => (<AutocompleteOption id={book.id} str={book.str} key={book.id}/>))
         }   
